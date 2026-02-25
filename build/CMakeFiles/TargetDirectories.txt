@@ -1,0 +1,3 @@
+/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/edit_cache.dir
+/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir

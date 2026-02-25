@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/BFS.h
+queue
+-
+Grid.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
+
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
+vector
+-
+Node.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
+
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
+
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/main.cpp
+SFML/Graphics.hpp
+-
+../include/Grid.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
+../include/BFS.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/BFS.h
+
