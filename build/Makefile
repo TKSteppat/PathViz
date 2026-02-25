@@ -150,6 +150,33 @@ backend/src/BFS.cpp.s:
 	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/BFS.cpp.s
 .PHONY : backend/src/BFS.cpp.s
 
+backend/src/DFS.o: backend/src/DFS.cpp.o
+
+.PHONY : backend/src/DFS.o
+
+# target to build an object file
+backend/src/DFS.cpp.o:
+	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o
+.PHONY : backend/src/DFS.cpp.o
+
+backend/src/DFS.i: backend/src/DFS.cpp.i
+
+.PHONY : backend/src/DFS.i
+
+# target to preprocess a source file
+backend/src/DFS.cpp.i:
+	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/DFS.cpp.i
+.PHONY : backend/src/DFS.cpp.i
+
+backend/src/DFS.s: backend/src/DFS.cpp.s
+
+.PHONY : backend/src/DFS.s
+
+# target to generate assembly for a file
+backend/src/DFS.cpp.s:
+	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/DFS.cpp.s
+.PHONY : backend/src/DFS.cpp.s
+
 backend/src/grid.o: backend/src/grid.cpp.o
 
 .PHONY : backend/src/grid.o
@@ -243,6 +270,9 @@ help:
 	@echo "... backend/src/BFS.o"
 	@echo "... backend/src/BFS.i"
 	@echo "... backend/src/BFS.s"
+	@echo "... backend/src/DFS.o"
+	@echo "... backend/src/DFS.i"
+	@echo "... backend/src/DFS.s"
 	@echo "... backend/src/grid.o"
 	@echo "... backend/src/grid.i"
 	@echo "... backend/src/grid.s"

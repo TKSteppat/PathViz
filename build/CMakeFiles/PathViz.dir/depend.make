@@ -4,16 +4,28 @@
 CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o: ../backend/include/BFS.h
 CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o: ../backend/include/Grid.h
 CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o: ../backend/include/Node.h
+CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o: ../backend/include/Pathfinder.h
 CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o: ../backend/src/BFS.cpp
+
+CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/include/DFS.h
+CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/include/Grid.h
+CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/include/Node.h
+CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/include/Pathfinder.h
+CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/src/DFS.cpp
 
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o: ../backend/include/Grid.h
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o: ../backend/include/Node.h
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o: ../backend/src/grid.cpp
 
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/BFS.h
+CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/DFS.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/Grid.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/Node.h
+CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/Pathfinder.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/src/main.cpp
 
+CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o: ../backend/include/Grid.h
+CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o: ../backend/include/Node.h
+CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o: ../backend/include/Pathfinder.h
 CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o: ../backend/src/pathfinder.cpp
 

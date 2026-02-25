@@ -5,15 +5,27 @@ CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/BFS.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Pathfinder.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/BFS.cpp
+CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/DFS.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Pathfinder.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/DFS.cpp
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/grid.cpp
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/BFS.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/DFS.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Pathfinder.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/main.cpp
 CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Grid.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Node.h
+ /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Pathfinder.h
  /mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/pathfinder.cpp

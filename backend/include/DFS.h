@@ -1,22 +1,22 @@
-#ifndef BFS_H
-#define BFS_H
+#ifndef DFS_H
+#define DFS_H
 
-#include <queue>
+#include <stack>
 #include "Pathfinder.h"
 
-class BFS : public Pathfinder {
+class DFS : public Pathfinder {
 public:
-    BFS(Grid& g, Node* s, Node* go)
+    DFS(Grid& g, Node* s, Node* go)
         : Pathfinder(g, s, go) {
         frontier.push(start);
         start->visited = true;
     }
 
-    bool step() override;           // Executes one BFS iteration
+    bool step() override;
     bool isFinished() const override { return finished; }
 
 private:
-    std::queue<Node*> frontier;
+    std::stack<Node*> frontier;
     bool finished = false;
 
     void addNeighbors(Node* current);
