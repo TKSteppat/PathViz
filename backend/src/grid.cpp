@@ -1,4 +1,4 @@
-#include "../include/Grid.h"
+#include "../include/grid.h"
 #include <iostream>
 
 Grid::Grid(int w, int h) : width(w), height(h) {

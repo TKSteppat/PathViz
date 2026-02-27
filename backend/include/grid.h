@@ -2,7 +2,7 @@
 #define GRID_H
 
 #include <vector>
-#include "Node.h"
+#include "node.h"
 
 class Grid {
 public:

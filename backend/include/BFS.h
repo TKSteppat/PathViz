@@ -2,7 +2,7 @@
 #define BFS_H
 
 #include <queue>
-#include "Pathfinder.h"
+#include "pathfinder.h"
 
 class BFS : public Pathfinder {
 public:

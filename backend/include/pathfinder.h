@@ -1,8 +1,8 @@
 #ifndef PATHFINDER_H
 #define PATHFINDER_H
 
-#include "Grid.h"
-#include "Node.h"
+#include "grid.h"
+#include "node.h"
 
 class Pathfinder {
 public:

@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "../include/Grid.h"
+#include "../include/grid.h"
 #include "../include/BFS.h"
 #include "../include/DFS.h"
 // #include "../include/Dijkstra.h" // Uncomment when Dijkstra is added

@@ -2,7 +2,7 @@
 #define DFS_H
 
 #include <stack>
-#include "Pathfinder.h"
+#include "pathfinder.h"
 
 class DFS : public Pathfinder {
 public:

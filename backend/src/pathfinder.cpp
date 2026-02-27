@@ -1,1 +1,1 @@
-#include "../include/Pathfinder.h"
+#include "../include/pathfinder.h"
