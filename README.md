@@ -1,44 +1,87 @@
 # PathViz
 
-PathViz is an interactive visualization tool for pathfinding algorithms designed to show how algorithms explore and solve shortest-path problems step by step. The project uses a high-performance C++ backend paired with a web-based frontend to provide real-time, visual insight into algorithm behavior.
+PathViz is an interactive visualization tool for pathfinding algorithms designed to show how algorithms explore and solve shortest-path problems step by step. Users can create a grid-based environment, place obstacles, and select a pathfinding algorithm to visualize its execution. Instead of only displaying the final path, the system exposes intermediate states such as frontier expansion, node exploration, and pathfinding decisions.
 
-## Overview
-
-PathViz allows users to create a grid-based environment, place obstacles, and select a pathfinding algorithm to visualize its execution. Instead of only displaying the final path, the system exposes intermediate states such as frontier expansion, node exploration, and cost evaluation.
-
-This project is being developed as a senior Computer Science capstone project.
+This project is being developed as a senior Computer Science capstone project by Tyler Steppat.
 
 ## Features
 
-- Interactive 2D grid editor
-- Step-by-step pathfinding visualization
-- Playback controls (play, pause, step, speed)
-- Algorithm state explanation panel
-- Runtime metrics (nodes explored, path length, time)
+- Interactive 2D grid editor  
+- Click to place walls, right-click to remove walls  
+- Drag start (green) and goal (red) nodes  
+- Step-by-step pathfinding visualization  
+- Press `Space` to start/pause the algorithm  
+- Press `R` to reset the grid and clear previous searches  
 
 ## Algorithms
 
-- Breadth-First Search (BFS)
-- Depth-First Search (DFS)
-- Dijkstra’s Algorithm
+- Breadth-First Search (BFS)  
+- Depth-First Search (DFS)  
+- Dijkstra’s Algorithm (planned)
 
 ## Tech Stack
 
 **Backend**
 - C++ (C++17 / C++20)
 - STL data structures
-- REST or WebSocket API
-- JSON serialization
+- SFML for graphics
 
 **Frontend**
-- JavaScript
-- HTML & CSS
-- HTML Canvas rendering
+- Integrated via SFML window (no separate web UI for MVP)
 
-## Status
+## Building and Running
 
-This project is currently in development.
+### Prerequisites
+- C++17 compatible compiler  
+- CMake (3.10+)  
+- SFML 2.5+  
+- Windows, Linux, or WSL/WSLg environment
 
-## Author
+### Build Steps
+1. Clone the repository and enter it:
+
+   ```bash
+   git clone <your-repo-url>
+   cd PathViz
+
+Create and enter the build directory:
+
+mkdir build
+cd build
+
+Configure the project with CMake:
+
+cmake ..
+
+Build the project:
+
+cmake --build .
+Running
+
+From the build directory, run:
+
+./PathViz
+
+Controls:
+
+Left-Click: Place walls
+
+Right-Click: Remove walls
+
+Drag Green/Red nodes: Move start/goal positions
+
+Spacebar: Start/pause the selected algorithm
+
+R: Reset the grid
+
+Status
+
+BFS and DFS fully implemented and interactive
+
+Wall placement, node dragging, and visualization working
+
+Dijkstra’s Algorithm planned for future releases
+
+Author
 
 Tyler Steppat
