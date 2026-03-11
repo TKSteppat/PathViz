@@ -43,26 +43,36 @@ This project is being developed as a senior Computer Science capstone project by
    ```bash
    git clone <your-repo-url>
    cd PathViz
+   ```
 
-Create and enter the build directory:
+2. Create and enter the build directory:
 
-mkdir build
-cd build
+   ```bash
+   mkdir build
+   cd build
+   ```
 
-Configure the project with CMake:
+3. Configure the project with CMake:
 
-cmake ..
+   ```bash
+   cmake ..
+   ```
 
-Build the project:
+4. Build the project:
 
-cmake --build .
-Running
+   ```bash
+   cmake --build .
+   ```
 
-From the build directory, run:
+## Running
 
-./PathViz
+From the PathViz directory, run:
 
-Controls:
+   ```bash
+   ./build/PathViz
+   ```
+
+## Controls:
 
 Left-Click: Place walls
 
@@ -74,7 +84,7 @@ Spacebar: Start/pause the selected algorithm
 
 R: Reset the grid
 
-Status
+## Status
 
 BFS and DFS fully implemented and interactive
 
@@ -82,6 +92,6 @@ Wall placement, node dragging, and visualization working
 
 Dijkstra’s Algorithm planned for future releases
 
-Author
+## Author
 
 Tyler Steppat
