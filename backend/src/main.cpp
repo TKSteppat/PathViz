@@ -2,144 +2,260 @@
 #include "../include/grid.h"
 #include "../include/BFS.h"
 #include "../include/DFS.h"
-// #include "../include/Dijkstra.h" // Uncomment when Dijkstra is added
 #include <iostream>
 
-Pathfinder* showMenuAndChoose(Grid& grid, Node* start, Node* goal, sf::RenderWindow& window) {
-    sf::Font font;
-    if (!font.loadFromFile("assets/fonts/sansation.ttf")) {
-        // If font fails, we just exit menu
-        return nullptr;
-    }
+enum AlgoType {
+    BFS_ALGO,
+    DFS_ALGO
+};
 
-    // Buttons as rectangles
-    sf::RectangleShape bfsButton(sf::Vector2f(200, 50));
-    bfsButton.setPosition(100, 100);
+AlgoType showMenuAndChoose(sf::RenderWindow& window) {
+
+    sf::Font font;
+    font.loadFromFile("assets/fonts/sansation.ttf");
+
+    sf::RectangleShape bfsButton(sf::Vector2f(200,50));
+    bfsButton.setPosition(100,100);
     bfsButton.setFillColor(sf::Color::White);
 
-    sf::RectangleShape dfsButton(sf::Vector2f(200, 50));
-    dfsButton.setPosition(100, 200);
+    sf::RectangleShape dfsButton(sf::Vector2f(200,50));
+    dfsButton.setPosition(100,200);
     dfsButton.setFillColor(sf::Color::White);
 
-    sf::RectangleShape dijkstraButton(sf::Vector2f(200, 50));
-    dijkstraButton.setPosition(100, 300);
-    dijkstraButton.setFillColor(sf::Color::White);
-
-    // Button labels
-    sf::Text bfsText("BFS", font, 24);
+    sf::Text bfsText("BFS",font,24);
     bfsText.setFillColor(sf::Color::Black);
-    bfsText.setPosition(150, 110);
+    bfsText.setPosition(160,110);
 
-    sf::Text dfsText("DFS", font, 24);
+    sf::Text dfsText("DFS",font,24);
     dfsText.setFillColor(sf::Color::Black);
-    dfsText.setPosition(150, 210);
+    dfsText.setPosition(160,210);
 
-    sf::Text dijkstraText("Dijkstra's", font, 24);
-    dijkstraText.setFillColor(sf::Color::Black);
-    dijkstraText.setPosition(130, 310);
+    while(window.isOpen()) {
 
-    while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+
+        while(window.pollEvent(event)) {
+
+            if(event.type == sf::Event::Closed)
                 window.close();
 
-            if (event.type == sf::Event::MouseButtonPressed) {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if(event.type == sf::Event::MouseButtonPressed) {
 
-                if (bfsButton.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    return new BFS(grid, start, goal);
-                if (dfsButton.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    return new DFS(grid, start, goal);
-                if (dijkstraButton.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    return nullptr; // placeholder
+                sf::Vector2i mouse = sf::Mouse::getPosition(window);
+
+                if(bfsButton.getGlobalBounds().contains(mouse.x,mouse.y))
+                    return BFS_ALGO;
+
+                if(dfsButton.getGlobalBounds().contains(mouse.x,mouse.y))
+                    return DFS_ALGO;
             }
         }
 
         window.clear(sf::Color::Black);
 
-        // Draw buttons and labels
         window.draw(bfsButton);
         window.draw(dfsButton);
-        window.draw(dijkstraButton);
-
         window.draw(bfsText);
         window.draw(dfsText);
-        window.draw(dijkstraText);
 
         window.display();
     }
 
-    return nullptr;
+    return BFS_ALGO;
 }
 
 int main() {
+
     const int rows = 20;
     const int cols = 20;
     const int cellSize = 30;
 
-    Grid grid(rows, cols);
+    Grid grid(rows,cols);
 
-    // Add sample walls
-    for (int i = 5; i < 15; i++) grid.getNode(10, i).isWall = true;
-    for (int i = 0; i < 8; i++) grid.getNode(i, 5).isWall = true;
+    Node* start = &grid.getNode(0,0);
+    Node* goal = &grid.getNode(rows-1,cols-1);
 
-    Node* start = &grid.getNode(0, 0);
-    Node* goal = &grid.getNode(rows - 1, cols - 1);
+    sf::RenderWindow window(sf::VideoMode(cols*cellSize,rows*cellSize),"PathViz");
 
-    sf::RenderWindow window(sf::VideoMode(cols * cellSize, rows * cellSize), "PathViz");
+    AlgoType selectedAlgo = showMenuAndChoose(window);
 
-    Pathfinder* algo = showMenuAndChoose(grid, start, goal, window);
-    if (!algo) return 0; // user closed window or Dijkstra not implemented
+    Pathfinder* algo = nullptr;
 
     bool running = false;
+    bool draggingStart = false;
+    bool draggingGoal = false;
+    bool drawingWalls = false;
+
     sf::Clock clock;
 
-    while (window.isOpen()) {
+    while(window.isOpen()) {
+
         sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+
+        while(window.pollEvent(event)) {
+
+            if(event.type == sf::Event::Closed)
                 window.close();
 
-            if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Space)
+            if(event.type == sf::Event::KeyPressed) {
+
+                if(event.key.code == sf::Keyboard::Space && !running) {
+
+                    for(int r=0;r<rows;r++)
+                        for(int c=0;c<cols;c++){
+                            Node& node = grid.getNode(r,c);
+                            node.visited = false;
+                            node.parent = nullptr;
+                        }
+
+                    if(algo) delete algo;
+
+                    if(selectedAlgo == BFS_ALGO)
+                        algo = new BFS(grid,start,goal);
+
+                    if(selectedAlgo == DFS_ALGO)
+                        algo = new DFS(grid,start,goal);
+
                     running = true;
+                }
+
+                if(event.key.code == sf::Keyboard::R) {
+
+                    running = false;
+
+                    for(int r=0;r<rows;r++)
+                        for(int c=0;c<cols;c++){
+                            Node& node = grid.getNode(r,c);
+                            node.visited = false;
+                            node.parent = nullptr;
+                            node.isWall = false;
+                        }
+                }
+            }
+
+            if(!running && event.type == sf::Event::MouseButtonPressed) {
+
+                int col = event.mouseButton.x / cellSize;
+                int row = event.mouseButton.y / cellSize;
+
+                if(grid.isValid(row,col)) {
+
+                    Node* clicked = &grid.getNode(row,col);
+
+                    if(clicked == start)
+                        draggingStart = true;
+
+                    else if(clicked == goal)
+                        draggingGoal = true;
+
+                    else {
+
+                        if(clicked != start && clicked != goal) {
+                            clicked->isWall = !clicked->isWall;
+                            drawingWalls = true;
+                        }
+                    }
+                }
+            }
+
+            if(event.type == sf::Event::MouseButtonReleased) {
+
+                draggingStart = false;
+                draggingGoal = false;
+                drawingWalls = false;
             }
         }
 
-        // Run one step of the algorithm every 50ms
-        if (running && !algo->isFinished()) {
-            if (clock.getElapsedTime().asMilliseconds() > 50) {
+        if(!running && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+            sf::Vector2i mouse = sf::Mouse::getPosition(window);
+
+            int col = mouse.x / cellSize;
+            int row = mouse.y / cellSize;
+
+            if(grid.isValid(row,col)) {
+
+                Node* node = &grid.getNode(row,col);
+
+                if(draggingStart) {
+
+                    if(!node->isWall && node != goal)
+                        start = node;
+                }
+
+                else if(draggingGoal) {
+
+                    if(!node->isWall && node != start)
+                        goal = node;
+                }
+
+                else if(drawingWalls) {
+
+                    if(node != start && node != goal)
+                        node->isWall = true;
+                }
+            }
+        }
+
+        if(running && algo && !algo->isFinished()) {
+
+            if(clock.getElapsedTime().asMilliseconds() > 50) {
                 algo->step();
                 clock.restart();
             }
         }
 
-        // Draw grid
         window.clear(sf::Color::White);
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                Node& node = grid.getNode(r, c);
-                sf::RectangleShape cell(sf::Vector2f(cellSize - 1, cellSize - 1));
-                cell.setPosition(c * cellSize, r * cellSize);
 
-                if (&node == start)
+        for(int r=0;r<rows;r++)
+            for(int c=0;c<cols;c++){
+
+                Node& node = grid.getNode(r,c);
+
+                sf::RectangleShape cell(sf::Vector2f(cellSize-1,cellSize-1));
+                cell.setPosition(c*cellSize,r*cellSize);
+
+                if(&node == start)
                     cell.setFillColor(sf::Color::Green);
-                else if (&node == goal)
+
+                else if(&node == goal)
                     cell.setFillColor(sf::Color::Red);
-                else if (node.isWall)
+
+                else if(node.isWall)
                     cell.setFillColor(sf::Color::Black);
-                else if (node.visited)
+
+                else if(node.visited)
                     cell.setFillColor(sf::Color::Blue);
+
                 else
                     cell.setFillColor(sf::Color::White);
 
                 window.draw(cell);
             }
+
+        if(goal->parent != nullptr) {
+
+            Node* pathNode = goal;
+
+            while(pathNode && pathNode->parent) {
+
+                pathNode = pathNode->parent;
+
+                if(pathNode != start && !pathNode->isWall) {
+
+                    sf::RectangleShape pathCell(sf::Vector2f(cellSize-1,cellSize-1));
+                    pathCell.setPosition(pathNode->x*cellSize,pathNode->y*cellSize);
+                    pathCell.setFillColor(sf::Color::Yellow);
+
+                    window.draw(pathCell);
+                }
+            }
         }
+
         window.display();
     }
 
     delete algo;
+
     return 0;
 }
