@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o"
   "CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o"
+  "CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o"
   "CMakeFiles/PathViz.dir/backend/src/grid.cpp.o"
   "CMakeFiles/PathViz.dir/backend/src/main.cpp.o"
   "CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o"

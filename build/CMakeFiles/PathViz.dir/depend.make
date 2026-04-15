@@ -13,12 +13,20 @@ CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/include/node.h
 CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/include/pathfinder.h
 CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o: ../backend/src/DFS.cpp
 
+CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o: ../backend/include/Dijkstra.h
+CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o: ../backend/include/Pathfinder.h
+CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o: ../backend/include/grid.h
+CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o: ../backend/include/node.h
+CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o: ../backend/src/Dijkstra.cpp
+
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o: ../backend/include/grid.h
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o: ../backend/include/node.h
 CMakeFiles/PathViz.dir/backend/src/grid.cpp.o: ../backend/src/grid.cpp
 
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/BFS.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/DFS.h
+CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/Dijkstra.h
+CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/Pathfinder.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/grid.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/node.h
 CMakeFiles/PathViz.dir/backend/src/main.cpp.o: ../backend/include/pathfinder.h

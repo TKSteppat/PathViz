@@ -13,6 +13,7 @@ add_executable(PathViz
     backend/src/grid.cpp
     backend/src/BFS.cpp
     backend/src/DFS.cpp
+    backend/src/Dijkstra.cpp
     backend/src/pathfinder.cpp
 )
 

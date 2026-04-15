@@ -177,6 +177,33 @@ backend/src/DFS.cpp.s:
 	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/DFS.cpp.s
 .PHONY : backend/src/DFS.cpp.s
 
+backend/src/Dijkstra.o: backend/src/Dijkstra.cpp.o
+
+.PHONY : backend/src/Dijkstra.o
+
+# target to build an object file
+backend/src/Dijkstra.cpp.o:
+	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o
+.PHONY : backend/src/Dijkstra.cpp.o
+
+backend/src/Dijkstra.i: backend/src/Dijkstra.cpp.i
+
+.PHONY : backend/src/Dijkstra.i
+
+# target to preprocess a source file
+backend/src/Dijkstra.cpp.i:
+	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.i
+.PHONY : backend/src/Dijkstra.cpp.i
+
+backend/src/Dijkstra.s: backend/src/Dijkstra.cpp.s
+
+.PHONY : backend/src/Dijkstra.s
+
+# target to generate assembly for a file
+backend/src/Dijkstra.cpp.s:
+	$(MAKE) -f CMakeFiles/PathViz.dir/build.make CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.s
+.PHONY : backend/src/Dijkstra.cpp.s
+
 backend/src/grid.o: backend/src/grid.cpp.o
 
 .PHONY : backend/src/grid.o
@@ -273,6 +300,9 @@ help:
 	@echo "... backend/src/DFS.o"
 	@echo "... backend/src/DFS.i"
 	@echo "... backend/src/DFS.s"
+	@echo "... backend/src/Dijkstra.o"
+	@echo "... backend/src/Dijkstra.i"
+	@echo "... backend/src/Dijkstra.s"
 	@echo "... backend/src/grid.o"
 	@echo "... backend/src/grid.i"
 	@echo "... backend/src/grid.s"

@@ -18,6 +18,18 @@ stack
 pathfinder.h
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/pathfinder.h
 
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Dijkstra.h
+queue
+-
+Pathfinder.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Pathfinder.h
+
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Pathfinder.h
+grid.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/grid.h
+node.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/node.h
+
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/grid.h
 vector
 -
@@ -25,28 +37,14 @@ node.h
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/node.h
 
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/node.h
+limits
+-
 
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/pathfinder.h
 grid.h
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/grid.h
 node.h
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/node.h
-
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/BFS.cpp
-../include/BFS.h
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/BFS.h
-
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/DFS.cpp
-../include/DFS.h
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/DFS.h
-vector
--
-
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/grid.cpp
-../include/grid.h
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/grid.h
-iostream
--
 
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/main.cpp
 SFML/Graphics.hpp
@@ -57,10 +55,14 @@ SFML/Graphics.hpp
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/BFS.h
 ../include/DFS.h
 /mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/DFS.h
+../include/Dijkstra.h
+/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/Dijkstra.h
 iostream
 -
-
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/pathfinder.cpp
-../include/pathfinder.h
-/mnt/c/School/Spring2026/CSCI490/PathViz/backend/include/pathfinder.h
+limits
+-
+cstdlib
+-
+vector
+-
 

@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/BFS.cpp" "/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir/backend/src/BFS.cpp.o"
   "/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/DFS.cpp" "/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir/backend/src/DFS.cpp.o"
+  "/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/Dijkstra.cpp" "/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir/backend/src/Dijkstra.cpp.o"
   "/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/grid.cpp" "/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir/backend/src/grid.cpp.o"
   "/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/main.cpp" "/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir/backend/src/main.cpp.o"
   "/mnt/c/School/Spring2026/CSCI490/PathViz/backend/src/pathfinder.cpp" "/mnt/c/School/Spring2026/CSCI490/PathViz/build/CMakeFiles/PathViz.dir/backend/src/pathfinder.cpp.o"
