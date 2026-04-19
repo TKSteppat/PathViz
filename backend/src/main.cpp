@@ -8,21 +8,16 @@
 #include <vector>
 
 // =========================
-// RESET ONLY ALGORITHM STATE
+// STATE
 // =========================
-void resetGridState(Grid& grid, int rows, int cols) {
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            Node& n = grid.getNode(r, c);
-            n.visited = false;
-            n.parent = nullptr;
-            n.distance = std::numeric_limits<float>::infinity();
-        }
-    }
-}
+enum AlgoType { NONE, BFS_T, DFS_T, DIJKSTRA_T };
+
+AlgoType selectedAlgo = NONE;
+bool weightMode = false;
+int delay = 50;
 
 // =========================
-// FULL RESET BOARD
+// CLEAR BOARD
 // =========================
 void clearBoard(Grid& grid, int rows, int cols, Node* start, Node* goal) {
     for (int r = 0; r < rows; r++) {
@@ -32,6 +27,7 @@ void clearBoard(Grid& grid, int rows, int cols, Node* start, Node* goal) {
             n.parent = nullptr;
             n.distance = std::numeric_limits<float>::infinity();
             n.isWall = false;
+            n.weight = 1.0f;
         }
     }
 
@@ -40,19 +36,17 @@ void clearBoard(Grid& grid, int rows, int cols, Node* start, Node* goal) {
 }
 
 // =========================
-// MAZE GENERATOR (NO BORDERS, FULL GRID USABLE)
+// MAZE GENERATION (DFS BACKTRACKER)
 // =========================
 void generateMaze(Grid& grid, int rows, int cols, Node* start, Node* goal) {
     clearBoard(grid, rows, cols, start, goal);
 
-    // STEP 1: fill everything with walls
     for (int r = 0; r < rows; r++)
         for (int c = 0; c < cols; c++)
             grid.getNode(r, c).isWall = true;
 
     std::vector<Node*> stack;
 
-    // Start anywhere (NO BORDER RESTRICTIONS)
     Node& startNode = grid.getNode(0, 0);
     startNode.isWall = false;
     stack.push_back(&startNode);
@@ -69,7 +63,6 @@ void generateMaze(Grid& grid, int rows, int cols, Node* start, Node* goal) {
             int nx = cur->x + dx[i];
             int ny = cur->y + dy[i];
 
-            // FULL GRID ACCESS (NO BORDERS)
             if (nx >= 0 && nx < rows &&
                 ny >= 0 && ny < cols) {
 
@@ -93,13 +86,12 @@ void generateMaze(Grid& grid, int rows, int cols, Node* start, Node* goal) {
         }
     }
 
-    // Ensure endpoints are always open
     start->isWall = false;
     goal->isWall = false;
 }
 
 // =========================
-// BUTTON STRUCT
+// BUTTON
 // =========================
 struct Button {
     sf::RectangleShape shape;
@@ -113,7 +105,22 @@ struct Button {
         window.draw(shape);
         window.draw(text);
     }
+
+    void setColor(sf::Color c) {
+        shape.setFillColor(c);
+    }
 };
+
+// =========================
+// BUTTON COLORS
+// =========================
+void updateButtonColors(Button& bfs, Button& dfs, Button& dij, Button& weightBtn) {
+    bfs.setColor(selectedAlgo == BFS_T ? sf::Color(120, 255, 120) : sf::Color(200, 200, 200));
+    dfs.setColor(selectedAlgo == DFS_T ? sf::Color(120, 255, 120) : sf::Color(200, 200, 200));
+    dij.setColor(selectedAlgo == DIJKSTRA_T ? sf::Color(120, 255, 120) : sf::Color(200, 200, 200));
+
+    weightBtn.setColor(weightMode ? sf::Color(180, 120, 255) : sf::Color(200, 200, 200));
+}
 
 // =========================
 // MAIN
@@ -129,37 +136,54 @@ int main() {
     Node* goal  = &grid.getNode(rows - 1, cols - 1);
 
     sf::RenderWindow window(
-        sf::VideoMode(cols * cellSize + 200, rows * cellSize),
-        "PathViz Toolbar"
+        sf::VideoMode(cols * cellSize + 250, rows * cellSize),
+        "PathViz"
     );
 
     sf::Font font;
     font.loadFromFile("assets/fonts/Sansation.ttf");
 
     // =========================
-    // TOOLBAR
+    // BUTTONS
     // =========================
     Button bfsBtn, dfsBtn, dijBtn, mazeBtn, resetBtn;
+    Button weightBtn, speedUpBtn, speedDownBtn;
 
-    Button* buttons[] = {&bfsBtn, &dfsBtn, &dijBtn, &mazeBtn, &resetBtn};
-    std::string labels[] = {"BFS", "DFS", "Dijkstra", "Maze", "Reset"};
+    Button* buttons[] = {
+        &bfsBtn, &dfsBtn, &dijBtn,
+        &mazeBtn, &resetBtn,
+        &weightBtn, &speedUpBtn, &speedDownBtn
+    };
 
-    for (int i = 0; i < 5; i++) {
-        buttons[i]->shape.setSize({180, 40});
-        buttons[i]->shape.setPosition(10, 10 + i * 50);
+    std::string labels[] = {
+        "BFS", "DFS", "Dijkstra",
+        "Maze", "Reset",
+        "Weight", "Speed +", "Speed -"
+    };
+
+    int count = 8;
+
+    for (int i = 0; i < count; i++) {
+        buttons[i]->shape.setSize({180, 35});
+        buttons[i]->shape.setPosition(10, 10 + i * 45);
         buttons[i]->shape.setFillColor(sf::Color(200, 200, 200));
 
         buttons[i]->text.setFont(font);
         buttons[i]->text.setString(labels[i]);
-        buttons[i]->text.setCharacterSize(20);
+        buttons[i]->text.setCharacterSize(18);
         buttons[i]->text.setFillColor(sf::Color::Black);
-        buttons[i]->text.setPosition(30, 15 + i * 50);
+        buttons[i]->text.setPosition(30, 12 + i * 45);
     }
+
+    sf::Text speedText;
+    speedText.setFont(font);
+    speedText.setCharacterSize(18);
+    speedText.setFillColor(sf::Color::Black);
+    speedText.setPosition(10, 8 + count * 45);
 
     Pathfinder* algo = nullptr;
     bool running = false;
     sf::Clock clock;
-    int delay = 50;
 
     // =========================
     // LOOP
@@ -174,32 +198,49 @@ int main() {
             if (event.type == sf::Event::MouseButtonPressed) {
                 auto mouse = sf::Mouse::getPosition(window);
 
-                if (bfsBtn.isClicked(mouse))
+                if (bfsBtn.isClicked(mouse)) {
+                    selectedAlgo = BFS_T;
                     algo = new BFS(grid, start, goal);
+                }
 
-                if (dfsBtn.isClicked(mouse))
+                if (dfsBtn.isClicked(mouse)) {
+                    selectedAlgo = DFS_T;
                     algo = new DFS(grid, start, goal);
+                }
 
-                if (dijBtn.isClicked(mouse))
+                if (dijBtn.isClicked(mouse)) {
+                    selectedAlgo = DIJKSTRA_T;
                     algo = new Dijkstra(grid, start, goal);
+                }
 
                 if (mazeBtn.isClicked(mouse))
                     generateMaze(grid, rows, cols, start, goal);
 
                 if (resetBtn.isClicked(mouse)) {
                     running = false;
+                    selectedAlgo = NONE;
                     delete algo;
                     algo = nullptr;
                     clearBoard(grid, rows, cols, start, goal);
                 }
+
+                if (weightBtn.isClicked(mouse))
+                    weightMode = !weightMode;
+
+                if (speedUpBtn.isClicked(mouse))
+                    delay = std::max(5, delay - 10);
+
+                if (speedDownBtn.isClicked(mouse))
+                    delay = std::min(300, delay + 10);
             }
         }
 
-        // START
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             running = true;
 
-        // WALL PLACEMENT
+        // =========================
+        // DRAW WALLS / WEIGHTS
+        // =========================
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             auto mouse = sf::Mouse::getPosition(window);
 
@@ -209,12 +250,28 @@ int main() {
             if (r >= 0 && r < rows && c >= 0 && c < cols) {
                 Node& n = grid.getNode(r, c);
 
-                if (&n != start && &n != goal)
-                    n.isWall = true;
+                if (&n != start && &n != goal) {
+                    if (weightMode) {
+                        n.weight = 5.0f;
+                        n.isWall = false;
+                    } else {
+                        n.isWall = true;
+                        n.weight = 1.0f;
+                    }
+                }
             }
         }
 
-        // RUN ALGO
+        // =========================
+        // SPEED DISPLAY
+        // =========================
+        speedText.setString("Speed delay: " + std::to_string(delay) + " ms");
+
+        updateButtonColors(bfsBtn, dfsBtn, dijBtn, weightBtn);
+
+        // =========================
+        // ALGORITHM STEP
+        // =========================
         if (running && algo && !algo->isFinished()) {
             if (clock.getElapsedTime().asMilliseconds() > delay) {
                 algo->step();
@@ -230,6 +287,8 @@ int main() {
         for (auto b : buttons)
             b->draw(window);
 
+        window.draw(speedText);
+
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 Node& n = grid.getNode(r, c);
@@ -240,6 +299,7 @@ int main() {
                 if (&n == start) cell.setFillColor(sf::Color::Green);
                 else if (&n == goal) cell.setFillColor(sf::Color::Red);
                 else if (n.isWall) cell.setFillColor(sf::Color::Black);
+                else if (n.weight > 1.0f) cell.setFillColor(sf::Color(160, 80, 200));
                 else if (n.visited) cell.setFillColor(sf::Color::Blue);
                 else cell.setFillColor(sf::Color::White);
 
