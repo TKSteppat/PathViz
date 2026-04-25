@@ -16,8 +16,11 @@ AlgoType selectedAlgo = NONE;
 bool weightMode = false;
 int delay = 50;
 
+bool draggingStart = false;
+bool draggingGoal = false;
+
 // =========================
-// CLEAR BOARD
+// HELPERS
 // =========================
 void clearBoard(Grid& grid, int rows, int cols, Node* start, Node* goal) {
     for (int r = 0; r < rows; r++) {
@@ -35,9 +38,6 @@ void clearBoard(Grid& grid, int rows, int cols, Node* start, Node* goal) {
     goal->isWall = false;
 }
 
-// =========================
-// MAZE GENERATION
-// =========================
 void generateMaze(Grid& grid, int rows, int cols, Node* start, Node* goal) {
     clearBoard(grid, rows, cols, start, goal);
 
@@ -64,10 +64,9 @@ void generateMaze(Grid& grid, int rows, int cols, Node* start, Node* goal) {
             int ny = cur->y + dy[i];
 
             if (nx >= 0 && nx < rows &&
-                ny >= 0 && ny < cols) {
-
-                if (grid.getNode(nx, ny).isWall)
-                    neighbors.push_back(&grid.getNode(nx, ny));
+                ny >= 0 && ny < cols &&
+                grid.getNode(nx, ny).isWall) {
+                neighbors.push_back(&grid.getNode(nx, ny));
             }
         }
 
@@ -111,15 +110,39 @@ struct Button {
     }
 };
 
-// =========================
-// BUTTON COLORS
-// =========================
 void updateButtonColors(Button& bfs, Button& dfs, Button& dij, Button& weightBtn) {
-    bfs.setColor(selectedAlgo == BFS_T ? sf::Color(120, 255, 120) : sf::Color(200, 200, 200));
-    dfs.setColor(selectedAlgo == DFS_T ? sf::Color(120, 255, 120) : sf::Color(200, 200, 200));
-    dij.setColor(selectedAlgo == DIJKSTRA_T ? sf::Color(120, 255, 120) : sf::Color(200, 200, 200));
+    bfs.setColor(selectedAlgo == BFS_T ? sf::Color(120,255,120) : sf::Color(200,200,200));
+    dfs.setColor(selectedAlgo == DFS_T ? sf::Color(120,255,120) : sf::Color(200,200,200));
+    dij.setColor(selectedAlgo == DIJKSTRA_T ? sf::Color(120,255,120) : sf::Color(200,200,200));
 
-    weightBtn.setColor(weightMode ? sf::Color(180, 120, 255) : sf::Color(200, 200, 200));
+    weightBtn.setColor(weightMode ? sf::Color(180,120,255) : sf::Color(200,200,200));
+}
+
+// =========================
+// STATS
+// =========================
+int countVisited(Grid& grid, int rows, int cols) {
+    int count = 0;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            if (grid.getNode(r,c).visited) count++;
+    return count;
+}
+
+int countWalls(Grid& grid, int rows, int cols) {
+    int count = 0;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            if (grid.getNode(r,c).isWall) count++;
+    return count;
+}
+
+int countWeights(Grid& grid, int rows, int cols) {
+    int count = 0;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            if (grid.getNode(r,c).weight > 1.0f) count++;
+    return count;
 }
 
 // =========================
@@ -129,12 +152,12 @@ int main() {
     const int rows = 20;
     const int cols = 20;
     const int cellSize = 30;
-    const int toolbarWidth = 200;
+    const int toolbarWidth = 240;
 
     Grid grid(rows, cols);
 
-    Node* start = &grid.getNode(0, 0);
-    Node* goal  = &grid.getNode(rows - 1, cols - 1);
+    Node* start = &grid.getNode(0,0);
+    Node* goal = &grid.getNode(rows-1, cols-1);
 
     sf::RenderWindow window(
         sf::VideoMode(cols * cellSize + toolbarWidth, rows * cellSize),
@@ -144,9 +167,6 @@ int main() {
     sf::Font font;
     font.loadFromFile("assets/fonts/Sansation.ttf");
 
-    // =========================
-    // BUTTONS
-    // =========================
     Button bfsBtn, dfsBtn, dijBtn, mazeBtn, resetBtn;
     Button weightBtn, speedUpBtn, speedDownBtn;
 
@@ -162,33 +182,28 @@ int main() {
         "Weight", "Speed +", "Speed -"
     };
 
-    int count = 8;
-
-    for (int i = 0; i < count; i++) {
-        buttons[i]->shape.setSize({180, 35});
+    for (int i = 0; i < 8; i++) {
+        buttons[i]->shape.setSize({200, 35});
         buttons[i]->shape.setPosition(10, 10 + i * 45);
-        buttons[i]->shape.setFillColor(sf::Color(200, 200, 200));
+        buttons[i]->shape.setFillColor(sf::Color(200,200,200));
 
         buttons[i]->text.setFont(font);
         buttons[i]->text.setString(labels[i]);
         buttons[i]->text.setCharacterSize(18);
         buttons[i]->text.setFillColor(sf::Color::Black);
-        buttons[i]->text.setPosition(30, 12 + i * 45);
+        buttons[i]->text.setPosition(25, 15 + i * 45);
     }
 
-    sf::Text speedText;
-    speedText.setFont(font);
-    speedText.setCharacterSize(18);
-    speedText.setFillColor(sf::Color::Black);
-    speedText.setPosition(10, 8 + count * 45);
+    sf::Text statsText;
+    statsText.setFont(font);
+    statsText.setCharacterSize(20);
+    statsText.setFillColor(sf::Color::Black);
+    statsText.setPosition(10, 400);
 
     Pathfinder* algo = nullptr;
     bool running = false;
     sf::Clock clock;
 
-    // =========================
-    // LOOP
-    // =========================
     while (window.isOpen()) {
         sf::Event event;
 
@@ -198,6 +213,16 @@ int main() {
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 auto mouse = sf::Mouse::getPosition(window);
+
+                int c = (mouse.x - toolbarWidth) / cellSize;
+                int r = mouse.y / cellSize;
+
+                if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                    Node* clicked = &grid.getNode(r,c);
+
+                    if (clicked == start) draggingStart = true;
+                    else if (clicked == goal) draggingGoal = true;
+                }
 
                 if (bfsBtn.isClicked(mouse)) {
                     selectedAlgo = BFS_T;
@@ -219,7 +244,6 @@ int main() {
 
                 if (resetBtn.isClicked(mouse)) {
                     running = false;
-                    selectedAlgo = NONE;
                     delete algo;
                     algo = nullptr;
                     clearBoard(grid, rows, cols, start, goal);
@@ -234,14 +258,14 @@ int main() {
                 if (speedDownBtn.isClicked(mouse))
                     delay = std::min(300, delay + 10);
             }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                draggingStart = false;
+                draggingGoal = false;
+            }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            running = true;
-
-        // =========================
-        // DRAW WALLS / WEIGHTS
-        // =========================
+        // LEFT CLICK (draw OR drag)
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             auto mouse = sf::Mouse::getPosition(window);
 
@@ -249,27 +273,49 @@ int main() {
             int r = mouse.y / cellSize;
 
             if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                Node& n = grid.getNode(r, c);
+                Node* target = &grid.getNode(r, c);
 
-                if (&n != start && &n != goal) {
-                    if (weightMode) {
-                        n.weight = 5.0f;
-                        n.isWall = false;
-                    } else {
-                        n.isWall = true;
-                        n.weight = 1.0f;
+                if (draggingStart && target != goal && !target->isWall) {
+                    start = target;
+                }
+                else if (draggingGoal && target != start && !target->isWall) {
+                    goal = target;
+                }
+                else {
+                    if (target != start && target != goal) {
+                        if (weightMode) {
+                            target->weight = 5.0f;
+                            target->isWall = false;
+                        } else {
+                            target->isWall = true;
+                            target->weight = 1.0f;
+                        }
                     }
                 }
             }
         }
 
-        speedText.setString("Speed delay: " + std::to_string(delay) + " ms");
+        // RIGHT CLICK (erase)
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+            auto mouse = sf::Mouse::getPosition(window);
+
+            int c = (mouse.x - toolbarWidth) / cellSize;
+            int r = mouse.y / cellSize;
+
+            if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                Node& n = grid.getNode(r,c);
+                if (&n != start && &n != goal) {
+                    n.isWall = false;
+                    n.weight = 1.0f;
+                }
+            }
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            running = true;
 
         updateButtonColors(bfsBtn, dfsBtn, dijBtn, weightBtn);
 
-        // =========================
-        // ALGO STEP
-        // =========================
         if (running && algo && !algo->isFinished()) {
             if (clock.getElapsedTime().asMilliseconds() > delay) {
                 algo->step();
@@ -277,25 +323,23 @@ int main() {
             }
         }
 
-        // =========================
-        // DRAW
-        // =========================
-        window.clear(sf::Color::White);
+        statsText.setString(
+            "Visited: " + std::to_string(countVisited(grid, rows, cols)) +
+            "\nWalls: " + std::to_string(countWalls(grid, rows, cols)) +
+            "\nWeights: " + std::to_string(countWeights(grid, rows, cols)) +
+            "\nSpeed: " + std::to_string(delay) + " ms"
+        );
 
-        // Divider line
-        sf::RectangleShape divider(sf::Vector2f(2, rows * cellSize));
-        divider.setPosition(toolbarWidth - 2, 0);
-        divider.setFillColor(sf::Color::Black);
-        window.draw(divider);
+        window.clear(sf::Color::White);
 
         for (auto b : buttons)
             b->draw(window);
 
-        window.draw(speedText);
+        window.draw(statsText);
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                Node& n = grid.getNode(r, c);
+                Node& n = grid.getNode(r,c);
 
                 sf::RectangleShape cell({cellSize - 1, cellSize - 1});
                 cell.setPosition(c * cellSize + toolbarWidth, r * cellSize);
@@ -303,7 +347,7 @@ int main() {
                 if (&n == start) cell.setFillColor(sf::Color::Green);
                 else if (&n == goal) cell.setFillColor(sf::Color::Red);
                 else if (n.isWall) cell.setFillColor(sf::Color::Black);
-                else if (n.weight > 1.0f) cell.setFillColor(sf::Color(160, 80, 200));
+                else if (n.weight > 1.0f) cell.setFillColor(sf::Color(160,80,200));
                 else if (n.visited) cell.setFillColor(sf::Color::Blue);
                 else cell.setFillColor(sf::Color::White);
 
