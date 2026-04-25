@@ -36,7 +36,7 @@ void clearBoard(Grid& grid, int rows, int cols, Node* start, Node* goal) {
 }
 
 // =========================
-// MAZE GENERATION (DFS BACKTRACKER)
+// MAZE GENERATION
 // =========================
 void generateMaze(Grid& grid, int rows, int cols, Node* start, Node* goal) {
     clearBoard(grid, rows, cols, start, goal);
@@ -129,6 +129,7 @@ int main() {
     const int rows = 20;
     const int cols = 20;
     const int cellSize = 30;
+    const int toolbarWidth = 200;
 
     Grid grid(rows, cols);
 
@@ -136,7 +137,7 @@ int main() {
     Node* goal  = &grid.getNode(rows - 1, cols - 1);
 
     sf::RenderWindow window(
-        sf::VideoMode(cols * cellSize + 250, rows * cellSize),
+        sf::VideoMode(cols * cellSize + toolbarWidth, rows * cellSize),
         "PathViz"
     );
 
@@ -244,7 +245,7 @@ int main() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             auto mouse = sf::Mouse::getPosition(window);
 
-            int c = (mouse.x - 200) / cellSize;
+            int c = (mouse.x - toolbarWidth) / cellSize;
             int r = mouse.y / cellSize;
 
             if (r >= 0 && r < rows && c >= 0 && c < cols) {
@@ -262,15 +263,12 @@ int main() {
             }
         }
 
-        // =========================
-        // SPEED DISPLAY
-        // =========================
         speedText.setString("Speed delay: " + std::to_string(delay) + " ms");
 
         updateButtonColors(bfsBtn, dfsBtn, dijBtn, weightBtn);
 
         // =========================
-        // ALGORITHM STEP
+        // ALGO STEP
         // =========================
         if (running && algo && !algo->isFinished()) {
             if (clock.getElapsedTime().asMilliseconds() > delay) {
@@ -280,9 +278,15 @@ int main() {
         }
 
         // =========================
-        // RENDER
+        // DRAW
         // =========================
         window.clear(sf::Color::White);
+
+        // Divider line
+        sf::RectangleShape divider(sf::Vector2f(2, rows * cellSize));
+        divider.setPosition(toolbarWidth - 2, 0);
+        divider.setFillColor(sf::Color::Black);
+        window.draw(divider);
 
         for (auto b : buttons)
             b->draw(window);
@@ -294,7 +298,7 @@ int main() {
                 Node& n = grid.getNode(r, c);
 
                 sf::RectangleShape cell({cellSize - 1, cellSize - 1});
-                cell.setPosition(c * cellSize + 200, r * cellSize);
+                cell.setPosition(c * cellSize + toolbarWidth, r * cellSize);
 
                 if (&n == start) cell.setFillColor(sf::Color::Green);
                 else if (&n == goal) cell.setFillColor(sf::Color::Red);
